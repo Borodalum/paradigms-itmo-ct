@@ -52,12 +52,17 @@ public class ExpressionParser extends BaseParser implements TripleParser {
     private AbstractExpression parseOperation(AbstractExpression exp, int lastPriority, String lastOperation) {
         skipWhitespaces();
         if (eof() || expect(')')) {
+            int lastBalance = balance;
             if (expect(')')) {
                 balance--;
             }
             take();
             if (eof() && balance != 0) {
-                throw error("extra parenthesis", true, false);
+                if (lastBalance == balance) {
+                    throw error("missing parenthesis", true, false);
+                } else {
+                    throw error("extra parenthesis", true, false);
+                }
             }
             return exp;
         }

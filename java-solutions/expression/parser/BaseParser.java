@@ -1,11 +1,13 @@
-package expression.exceptions;
+package expression.parser;
 
-import expression.parser.ParserTestSet;
+import expression.exceptions.OverflowException;
+import expression.exceptions.ParseException;
 
 public abstract class BaseParser {
     private static final char END = 0;
     private String source;
     private char ch;
+    private char lastCh;
     private int pos;
 
     public BaseParser() {
@@ -48,6 +50,7 @@ public abstract class BaseParser {
     }
 
     protected void skipWhitespaces() {
+        lastCh = source.charAt(pos - 1);
         while (Character.isWhitespace(ch) || ch == '\u0085' || ch == '\u2028' || ch == '\u2029') {
             take();
         }
@@ -72,7 +75,7 @@ public abstract class BaseParser {
     protected ParseException error(String message, boolean showPos, boolean showCharacter) {
         StringBuilder sb = new StringBuilder();
         if (showPos) {
-            sb.append(pos).append(": ");
+            sb.append("At pos ").append(pos).append(": ");
         }
         sb.append(message);
         if (showCharacter) {
