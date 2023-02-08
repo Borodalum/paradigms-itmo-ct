@@ -27,7 +27,7 @@ public class CheckedNegate extends Negate {
 
     private void checkOverflow(int value) {
         if (value == Integer.MIN_VALUE) {
-            throw new OverflowException("Overflow while negating");
+            throw new OverflowException("Overflow in negate");
         }
     }
 
