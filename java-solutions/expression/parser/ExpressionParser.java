@@ -8,7 +8,8 @@ import java.util.Map;
 public class ExpressionParser extends BaseParser implements TripleParser {
     private static final Map<String, Integer> PRIORITIES = Map.of(
             "+", 0, "-", 1,
-            "*", 2, "/", 2
+            "*", 2, "/", 2,
+            "set", 0, "clear", 0
     );
 
     private int balance = 0;
@@ -18,10 +19,12 @@ public class ExpressionParser extends BaseParser implements TripleParser {
 
     public TripleExpression parse(String expression) {
         setSource(expression);
-
+        //System.out.println(expression);
         this.balance = 0;
         AbstractExpression main = parseOperation(parseOperand(), -1, "");
         while (!eof()) {
+            //System.out.println(main);
+            //System.out.println(currentSymbol());
             main = parseOperation(main, -1, "");
         }
         return main;
@@ -50,6 +53,9 @@ public class ExpressionParser extends BaseParser implements TripleParser {
     }
 
     private AbstractExpression parseOperation(AbstractExpression exp, int lastPriority, String lastOperation) {
+        if (expect('c', 's') & !(Character.isWhitespace(getLastCh()) || getLastCh() == ')' || getLastCh() == '(')) {
+            throw error("expect whitespace before operation set (clear)", true ,true);
+        }
         skipWhitespaces();
         if (eof() || expect(')')) {
             int lastBalance = balance;
@@ -66,9 +72,26 @@ public class ExpressionParser extends BaseParser implements TripleParser {
             }
             return exp;
         }
-        if (expect('+', '-', '*', '/')) {
+        if (expect('+', '-', '*', '/', 's', 'c')) {
             String curSymb = String.valueOf(currentSymbol());
+            if (expect('c')) {
+                /*if (!Character.isWhitespace(currentSymbol())) {
+                    throw error("expected operation (clear), take", true, true);
+                }*/
+                curSymb = "clear";
+            }
+            if (expect('s')) {
+                /*if (!Character.isWhitespace(currentSymbol())) {
+                    throw error("expected operation (set), take", true, true);
+                }*/
+                curSymb = "set";
+            }
             if (lastPriority == -1) {
+                if (curSymb.equals("set") || curSymb.equals("clear")) {
+                    for (int i = 0; i < curSymb.length() - 1; i++) {
+                        take();
+                    }
+                }
                 take();
                 if (PRIORITIES.get(curSymb) <= 1) {
                     return convertOperation(curSymb, exp, parseOperation(parseOperand(), PRIORITIES.get(curSymb), curSymb));
@@ -133,8 +156,14 @@ public class ExpressionParser extends BaseParser implements TripleParser {
             case "/" -> {
                 return new Divide(fOperand, sOperand);
             }
+            case "set" -> {
+                return new Set(fOperand, sOperand);
+            }
+            case "clear" -> {
+                return new Clear(fOperand, sOperand);
+            }
         }
-        throw error("unsupported operation to convert: ", false, true);
+        throw error("unsupported operation to convert:", false, true);
     }
 
     protected AbstractExpression convertUnary(String sign, AbstractExpression operand) {

@@ -19,5 +19,7 @@ public class Main {
                 System.out.println(i + " ".repeat(spaces) + e.getMessage());
             }
         }
+
+        System.out.println(eP.parse("((z set x)set x)"));
     }
 }

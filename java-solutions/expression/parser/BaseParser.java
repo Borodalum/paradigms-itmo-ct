@@ -26,6 +26,7 @@ public abstract class BaseParser {
         } else {
             ch = END;
         }
+        //System.out.println(currentSymbol());
     }
     protected boolean take(char... expectedChars) {
         take();
@@ -43,6 +44,9 @@ public abstract class BaseParser {
 
     protected char currentSymbol() {
         return ch;
+    }
+    protected char getLastCh() {
+        return lastCh;
     }
 
     protected boolean beetwin(char lowerBound, char upperBound) {
