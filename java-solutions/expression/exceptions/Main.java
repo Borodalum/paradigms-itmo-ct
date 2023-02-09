@@ -1,6 +1,5 @@
 package expression.exceptions;
 
-import expression.AbstractExpression;
 import expression.TripleExpression;
 
 public class Main {

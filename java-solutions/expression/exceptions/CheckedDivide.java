@@ -7,6 +7,7 @@ public class CheckedDivide extends Divide {
     public CheckedDivide(AbstractExpression firstExp, AbstractExpression secondExp) {
         super(firstExp, secondExp);
     }
+
     @Override
     protected int getResult(int firstOperand, int secondOperand) {
         if (firstOperand == Integer.MIN_VALUE && secondOperand == -1) {

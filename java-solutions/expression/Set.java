@@ -3,7 +3,7 @@ package expression;
 public class Set extends BinaryExpression {
 
     public Set(AbstractExpression firstOperand, AbstractExpression secondOperand) {
-        super(firstOperand, secondOperand,"set");
+        super(firstOperand, secondOperand, "set");
     }
 
     @Override

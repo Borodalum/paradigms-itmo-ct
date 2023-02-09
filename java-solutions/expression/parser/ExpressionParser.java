@@ -54,7 +54,7 @@ public class ExpressionParser extends BaseParser implements TripleParser {
 
     private AbstractExpression parseOperation(AbstractExpression exp, int lastPriority, String lastOperation) {
         if (expect('c', 's') & !(Character.isWhitespace(getLastCh()) || getLastCh() == ')' || getLastCh() == '(')) {
-            throw error("expect whitespace before operation set (clear)", true ,true);
+            throw error("expect whitespace before operation set (clear)", true, true);
         }
         skipWhitespaces();
         if (eof() || expect(')')) {
@@ -127,9 +127,11 @@ public class ExpressionParser extends BaseParser implements TripleParser {
         }
         return new Count(parseOperand());
     }
+
     private AbstractExpression parseNegated() {
-        if (beetwin('0', '9'))
+        if (beetwin('0', '9')) {
             return new Const(parseInteger(true));
+        }
         return convertUnary("-", parseOperand());
     }
 

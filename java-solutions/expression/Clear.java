@@ -3,7 +3,7 @@ package expression;
 public class Clear extends BinaryExpression {
 
     public Clear(AbstractExpression firstOperand, AbstractExpression secondOperand) {
-        super(firstOperand, secondOperand,"clear");
+        super(firstOperand, secondOperand, "clear");
     }
 
     @Override

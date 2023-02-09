@@ -1,6 +1,8 @@
 package expression.exceptions;
 
-import expression.*;
+import expression.AbstractExpression;
+import expression.Clear;
+import expression.Set;
 
 public final class ExpressionParser extends expression.parser.ExpressionParser {
     public ExpressionParser() {

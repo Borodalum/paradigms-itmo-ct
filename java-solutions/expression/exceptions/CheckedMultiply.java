@@ -12,7 +12,7 @@ public class CheckedMultiply extends Multiply {
     protected int getResult(int firstOperand, int secondOperand) {
         int res = firstOperand * secondOperand;
         if ((secondOperand != 0 && (res / secondOperand != firstOperand)) ||
-            firstOperand == Integer.MIN_VALUE && secondOperand == -1) {
+                firstOperand == Integer.MIN_VALUE && secondOperand == -1) {
             throw new OverflowException("Overflow in multiply");
         }
         return firstOperand * secondOperand;
