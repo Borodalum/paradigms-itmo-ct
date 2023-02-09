@@ -10,9 +10,10 @@ public class CheckedMultiply extends Multiply {
 
     @Override
     protected int getResult(int firstOperand, int secondOperand) {
-        int res = firstOperand * secondOperand;
-        if ((secondOperand != 0 && (res / secondOperand != firstOperand)) ||
-            firstOperand == Integer.MIN_VALUE && secondOperand == -1) {
+        if ((firstOperand > 0 && secondOperand < 0 && Integer.MIN_VALUE / firstOperand > secondOperand)
+                || (firstOperand < 0 && secondOperand > 0 && Integer.MIN_VALUE / secondOperand > firstOperand)
+                || (firstOperand > 0 && secondOperand > 0 && Integer.MAX_VALUE / firstOperand < secondOperand)
+                || (firstOperand < 0 && secondOperand < 0 && Integer.MAX_VALUE / firstOperand > secondOperand)) {
             throw new OverflowException("Overflow in multiply");
         }
         return firstOperand * secondOperand;
