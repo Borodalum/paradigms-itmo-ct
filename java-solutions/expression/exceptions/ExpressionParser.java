@@ -21,6 +21,12 @@ public final class ExpressionParser extends expression.parser.ExpressionParser {
             case "/" -> {
                 return new CheckedDivide(fOperand, sOperand);
             }
+            case "set" -> {
+                return new Set(fOperand, sOperand);
+            }
+            case "clear" -> {
+                return new Clear(fOperand, sOperand);
+            }
         }
         throw error("unsupported operation to convert: ", false, true);
     }
