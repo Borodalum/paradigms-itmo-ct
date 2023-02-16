@@ -11,7 +11,7 @@ public class CheckedSubtract extends Subtract {
     @Override
     protected int getResult(int firstOperand, int secondOperand) {
         if (firstOperand >= 0 && secondOperand < 0 && (Integer.MAX_VALUE + secondOperand < firstOperand)
-        || firstOperand < 0 && secondOperand >= 0 && (Integer.MIN_VALUE + secondOperand > firstOperand)) {
+                || firstOperand < 0 && secondOperand >= 0 && (Integer.MIN_VALUE + secondOperand > firstOperand)) {
             throw new OverflowException("Overflow in subtract");
         }
         return firstOperand - secondOperand;
