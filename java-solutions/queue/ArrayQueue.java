@@ -12,6 +12,8 @@ public class ArrayQueue {
     private int head = 1;
     private int tail = 1;
 
+    // [a, tail, null, null, null, head, b]
+
     private Object[] elements = new Object[2];
 
     public static ArrayQueue create() {
