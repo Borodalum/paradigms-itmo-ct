@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class ArrayQueueADT {
-    // Model: a[0]...a[n-1]
-    // Invariant: for i = 0...n: a[i] != null && n >= 0
+    // Model: a[1]...a[n]
+    // Invariant: for i = 1...n: a[i] != null && n >= 0
 
-    // Let immutable(n): for i in 0...n: a[i] == a'[i]
+    // Let immutable(n): for i in 1...n: a[i] == a'[i]
     private int size = 0;
     private int head = 1;
     private int tail = 1;
@@ -21,7 +21,7 @@ public class ArrayQueueADT {
     }
 
     // Pred: element != null && queue != null;
-    // Post: tail' = tail + 1 && a[tail] = element && immutable(tail, head)
+    // Post: n' = n + 1 && a[n] = element && immutable(n)
     public static void enqueue(final ArrayQueueADT queue, final Object element) {
         assert element != null;
         Objects.requireNonNull(element);
@@ -32,7 +32,7 @@ public class ArrayQueueADT {
     }
 
     // Pred: size > 0 && queue != null
-    // Post: R = element && elements[head] = element && element != null && immutable(tail, head)
+    // Post: R = element && elements[0] = element && element != null && immutable(n)
     public static Object element(final ArrayQueueADT queue) {
         assert queue.size > 0;
         cycleIndex(queue);
@@ -40,7 +40,7 @@ public class ArrayQueueADT {
     }
 
     // Pred: size > 0 && queue != null
-    // Post: head' = head - 1 && R = element && elements[head] = element && element != null && immutable(tail, head')
+    // Post: n' = n - 1 && R = element && elements[0] = element && element != null && immutable(n)
     public static Object dequeue(final ArrayQueueADT queue) {
         assert queue.size > 0;
         cycleIndex(queue);
@@ -61,7 +61,7 @@ public class ArrayQueueADT {
     }
 
     // Pred: queue != null
-    // Post: head = tail = 1 && size = 0
+    // Post: n = 0 && size = 0
     public static void clear(final ArrayQueueADT queue) {
         queue.head = 0;
         queue.tail = 0;
@@ -69,7 +69,7 @@ public class ArrayQueueADT {
     }
 
     // Pred: true
-    // Post: str = "[a[head], ..., a[tail]]"
+    // Post: str = "[a[0], ..., a[n]]"
     public static String toStr(final ArrayQueueADT queue) {
         StringBuilder sb = new StringBuilder("[");
         int i = 0;
@@ -85,7 +85,7 @@ public class ArrayQueueADT {
     }
 
     // Pred: queue != null;
-    // Post: 0 <= head, tail < elements.length
+    // Post: 0 <= n < elements.length
     private static void cycleIndex(final ArrayQueueADT queue) {
         if (queue.head == queue.elements.length) {
             queue.head = 0;
@@ -97,7 +97,7 @@ public class ArrayQueueADT {
     }
 
     // Pred: queue != null
-    // Post: elements'.length >= elements.length && immutable(tail, head')
+    // Post: elements'.length >= elements.length && immutable(n)
     private static void ensureCapacity(final ArrayQueueADT queue) {
         if (queue.head == queue.tail && queue.size == queue.elements.length) {
             Object[] tempHead = Arrays.copyOfRange(queue.elements, 0, queue.tail);

@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class ArrayQueueModule {
-    // Model: a[0]...a[n-1]
-    // Invariant: for i = 0...n: a[i] != null && n >= 0
+    // Model: a[1]...a[n]
+    // Invariant: for i = 1...n: a[i] != null && n >= 0
 
-    // Let immutable(n): for i in 0...n: a[i] == a'[i]
+    // Let immutable(n): for i in 1...n: a[i] == a'[i]
     private static int size = 0;
     private static int head = 1;
     private static int tail = 1;
@@ -15,7 +15,7 @@ public class ArrayQueueModule {
     private static Object[] elements = new Object[2];
 
     // Pred: element != null;
-    // Post: tail' = tail + 1 && a[tail] = element && immutable(n)
+    // Post: n' = n + 1 && a[0] = element && immutable(n)
     public static void enqueue(final Object element) {
         assert element != null;
         Objects.requireNonNull(element);
@@ -26,7 +26,7 @@ public class ArrayQueueModule {
     }
 
     // Pred: size > 0
-    // Post: R = element && elements[head] = element && element != null && immutable(n)
+    // Post: R = element && elements[0] = element && element != null && immutable(n)
     public static Object element() {
         assert size > 0;
         cycleIndex();
@@ -34,7 +34,7 @@ public class ArrayQueueModule {
     }
 
     // Pred: size > 0
-    // Post: head' = head - 1 && R = element && elements[head] = element && element != null && immutable(n)
+    // Post: n' = n - 1 && R = element && elements[0] = element && element != null && immutable(n)
     public static Object dequeue() {
         assert size > 0;
         cycleIndex();
@@ -55,7 +55,7 @@ public class ArrayQueueModule {
     }
 
     // Pred: true
-    // Post: head = tail = 1 && size = 0
+    // Post: n = 1 && size = 0
     public static void clear() {
         head = 0;
         tail = 0;
@@ -63,7 +63,7 @@ public class ArrayQueueModule {
     }
 
     // Pred: true
-    // Post: str = "[a[head], ..., a[tail]]"
+    // Post: str = "[a[0], ..., a[n]]"
     public static String toStr() {
         StringBuilder sb = new StringBuilder("[");
         int i = 0;
@@ -79,7 +79,7 @@ public class ArrayQueueModule {
     }
 
     // Pred: true;
-    // Post: 0 <= head, tail < elements.length
+    // Post: 0 <= n < elements.length
     private static void cycleIndex() {
         if (head == elements.length) {
             head = 0;
@@ -91,7 +91,7 @@ public class ArrayQueueModule {
     }
 
     // Pred: true
-    // Post: elements'.length >= elements.length && immutable(tail, head')
+    // Post: elements'.length >= elements.length && immutable(n)
     private static void ensureCapacity() {
         if (head == tail && size == elements.length) {
             Object[] tempHead = Arrays.copyOfRange(elements, 0, tail);

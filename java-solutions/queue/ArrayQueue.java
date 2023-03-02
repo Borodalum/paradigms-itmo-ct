@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class ArrayQueue {
-    // Model: a[0]...a[n-1]
-    // Invariant: for i = 0...n: a[i] != null && n >= 0
+    // Model: a[1]...a[n]
+    // Invariant: for i = 1...n: a[i] != null && n >= 0
 
-    // Let immutable(n): for i in 0...n: a[i] == a'[i]
+    // Let immutable(n): for i in 1...n: a[i] == a'[i]
     private int size = 0;
     private int head = 1;
     private int tail = 1;
@@ -21,7 +21,7 @@ public class ArrayQueue {
     }
 
     // Pred: element != null && queue != null;
-    // Post: tail' = tail + 1 && a[tail] = element && immutable(n)
+    // Post: n' = n + 1 && a[tail] = element && immutable(n)
     public void enqueue(ArrayQueue this, final Object element) {
         assert element != null;
         Objects.requireNonNull(element);
@@ -32,7 +32,7 @@ public class ArrayQueue {
     }
 
     // Pred: size > 0 && queue != null
-    // Post: R = element && elements[head] = element && element != null && immutable(n)
+    // Post: R = element && elements[0] = element && element != null && immutable(n)
     public Object element(ArrayQueue this) {
         assert this.size > 0;
         cycleIndex();
@@ -40,7 +40,7 @@ public class ArrayQueue {
     }
 
     // Pred: size > 0 && queue != null
-    // Post: head' = head - 1 && R = element && elements[head] = element && element != null && immutable(n)
+    // Post: n' = n - 1 && R = element && elements[0] = element && element != null && immutable(n)
     public Object dequeue(ArrayQueue this) {
         assert this.size > 0;
         cycleIndex();
@@ -61,7 +61,7 @@ public class ArrayQueue {
     }
 
     // Pred: queue != null
-    // Post: head = tail = 1 && size = 0 && immutable(n)
+    // Post: n = 1 && size = 0 && immutable(n)
     public void clear(ArrayQueue this) {
         this.head = 0;
         this.tail = 0;
@@ -69,7 +69,7 @@ public class ArrayQueue {
     }
 
     // Pred: true
-    // Post: str = "[a[head], ..., a[tail]]"
+    // Post: str = "[a[0], ..., a[n]]"
     public String toStr(ArrayQueue this) {
         StringBuilder sb = new StringBuilder("[");
         int i = 0;
@@ -85,7 +85,7 @@ public class ArrayQueue {
     }
 
     // Pred: queue != null;
-    // Post: 0 <= head, tail < elements.length
+    // Post: 0 <= n < elements.length
     private void cycleIndex(ArrayQueue this) {
         if (this.head == this.elements.length) {
             this.head = 0;
@@ -97,7 +97,7 @@ public class ArrayQueue {
     }
 
     // Pred: queue != null
-    // Post: elements'.length >= elements.length && immutable(tail, head')
+    // Post: elements'.length >= elements.length && immutable(n)
     private void ensureCapacity(ArrayQueue this) {
         if (this.head == this.tail && this.size == this.elements.length) {
             Object[] tempHead = Arrays.copyOfRange(this.elements, 0, this.tail);
