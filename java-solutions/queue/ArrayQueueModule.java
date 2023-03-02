@@ -15,7 +15,7 @@ public class ArrayQueueModule {
     private static Object[] elements = new Object[2];
 
     // Pred: element != null;
-    // Post: tail' = tail + 1 && a[tail] = element && immutable(tail, head)
+    // Post: tail' = tail + 1 && a[tail] = element && immutable(n)
     public static void enqueue(final Object element) {
         assert element != null;
         Objects.requireNonNull(element);
@@ -26,7 +26,7 @@ public class ArrayQueueModule {
     }
 
     // Pred: size > 0
-    // Post: R = element && elements[head] = element && element != null && immutable(tail, head)
+    // Post: R = element && elements[head] = element && element != null && immutable(n)
     public static Object element() {
         assert size > 0;
         cycleIndex();
@@ -34,7 +34,7 @@ public class ArrayQueueModule {
     }
 
     // Pred: size > 0
-    // Post: head' = head - 1 && R = element && elements[head] = element && element != null && immutable(tail, head')
+    // Post: head' = head - 1 && R = element && elements[head] = element && element != null && immutable(n)
     public static Object dequeue() {
         assert size > 0;
         cycleIndex();

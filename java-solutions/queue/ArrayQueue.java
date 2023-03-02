@@ -21,7 +21,7 @@ public class ArrayQueue {
     }
 
     // Pred: element != null && queue != null;
-    // Post: tail' = tail + 1 && a[tail] = element && immutable(tail, head)
+    // Post: tail' = tail + 1 && a[tail] = element && immutable(n)
     public void enqueue(ArrayQueue this, final Object element) {
         assert element != null;
         Objects.requireNonNull(element);
@@ -32,7 +32,7 @@ public class ArrayQueue {
     }
 
     // Pred: size > 0 && queue != null
-    // Post: R = element && elements[head] = element && element != null && immutable(tail, head)
+    // Post: R = element && elements[head] = element && element != null && immutable(n)
     public Object element(ArrayQueue this) {
         assert this.size > 0;
         cycleIndex();
@@ -40,7 +40,7 @@ public class ArrayQueue {
     }
 
     // Pred: size > 0 && queue != null
-    // Post: head' = head - 1 && R = element && elements[head] = element && element != null && immutable(tail, head')
+    // Post: head' = head - 1 && R = element && elements[head] = element && element != null && immutable(n)
     public Object dequeue(ArrayQueue this) {
         assert this.size > 0;
         cycleIndex();
@@ -49,19 +49,19 @@ public class ArrayQueue {
     }
 
     // Pred: queue != null
-    // Post: R = size && immutable(tail, head)
+    // Post: R = size && immutable(n)
     public int size(ArrayQueue this) {
         return this.size;
     }
 
     // Pred: queue != null
-    // Post: R = size == 0 && immutable(tail, head)
+    // Post: R = size == 0 && immutable(n)
     public boolean isEmpty(ArrayQueue this) {
         return this.size == 0;
     }
 
     // Pred: queue != null
-    // Post: head = tail = 1 && size = 0 && immutable(tail, head)
+    // Post: head = tail = 1 && size = 0 && immutable(n)
     public void clear(ArrayQueue this) {
         this.head = 0;
         this.tail = 0;
