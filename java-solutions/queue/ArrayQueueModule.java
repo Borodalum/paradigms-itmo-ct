@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class ArrayQueueModule {
-    // Model: a[head]...a[tail]
-    // Invariant: if head <= tail: for i in head...tail: a[i] != null, else for i in tail...head: a[i] != null;
+    // Model: a[0]...a[n-1]
+    // Invariant: for i = 0...n: a[i] != null && n >= 0
 
-    // Let immutable(n, m): if m <= n: for i in m...n: a'[i] == a[i], else for i in n...m: a'[i] == a[i]
+    // Let immutable(n): for i in 0...n: a[i] == a'[i]
     private static int size = 0;
     private static int head = 1;
     private static int tail = 1;
