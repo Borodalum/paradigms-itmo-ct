@@ -25,7 +25,7 @@ public class BinarySearch {
             // I: i' + 1 < a.len
             // I: i' < a.len - 1
         }
-        // P: i > a.len && int x && forall i in Iters forall j in Iters: j > i => a[i] >= a[j]
+        // P: i >= a.len && int x && forall i in Iters forall j in Iters: j > i => a[i] >= a[j]
         if (sum % 2 == 1) {
             // sum' % 2 == 1 && P
             System.out.println(iterBinSearch(a, x));
@@ -36,41 +36,47 @@ public class BinarySearch {
 
     }
 
-    // Pred: int x && forall i in Iters forall j in Iters: j > i => a[i] >= a[j]
+    // Pred: int x && forall i in Iters forall j in Iters: j > i => a[i] >= a[j] && a[a.len - 1] <= x <= a[0]
     // Post: int i: a[i] <= x && i = min(Iters)
     private static int iterBinSearch(int[] a, int x) {
         // left = -1
         int left = -1;
         // right = a.len
         int right = a.length;
-        // I: left' != right' - 1
+        // I: left' != right' - 1 && a[left] >= x && a[right] <= x
         while (left != right - 1) {
-            // mid = (left' + right') / 2
+            // mid = (left + right) / 2
             int mid = (left + right)/2;
             // P: mid < a.len && mid > 0 <- очевидно, из-за ограничений left и right
             if (a[mid] <= x) {
                 // P && a[mid] <= x
                 right = mid;
                 // right' = mid
+                // P && a[right'] <= x
             } else {
                 // P && a[mid] > x
                 left = mid;
                 // left' = mid
+                // P && a[left'] > x
             }
-            // I: left'/2 + right'/2 != right' - 1 || right'/2 + left'/2 - 1 != left'
-            // I: left'/2 != right'/2 - 1 || right'/2 - 1 != left'/2
-            // I: left'/2 != right'/2 - 1
+            // I: left'/2 + right'/2 != right' - 1 || right'/2 + left'/2 - 1 != left' && a[left'] > x && a[right'] <= x
+            // I: left'/2 != right'/2 - 1 || right'/2 - 1 != left'/2 && a[left'] > x && a[right'] <= x
+            // I: left'/2 != right'/2 - 1 && a[left'] > x && a[right'] <= x
+            // left' = left' / 2, right' = right'/2 && a[left'] > x && a[right'] <= x
+            // I: left' != right' - 1 && a[left'] > x && a[right'] <= x
         }
-        // right': a[right] <= x && right' = min(Iters)
+        // так как a[left'] > x && a[right'] <= x && left' + 1 == right', то right' = min(Iters): a[right'] <= x
+        // right': a[right'] <= x && right' = min(Iters)
         return right;
     }
 
     // Pred: int x && forall i in Iters forall j in Iters: j > i => a[i] >= a[j] && int left < a.len && right > 0
+    // && a[right] <= x <= a[left]
     // Post: int i: a[i] <= x && i = min(Iters)
     private static int recBinSearch(int[] a, int x, int left, int right) {
         // P = Pred
-        if (left >= right - 1) {
-            // P && left > right - 1
+        if (left == right - 1) {
+            // P && left == right - 1 && a[right] <= x <= a[left] =>
             // right: a[right] <= x && right = min(Iters)
             return right;
         }
