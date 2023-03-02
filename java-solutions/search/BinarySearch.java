@@ -18,7 +18,7 @@ public class BinarySearch {
         while (i < a.length) {
             // I: i' < a.len
             a[i] = Integer.parseInt(args[i + 1]);
-            // sum' = sum' + a[i]
+            // sum' = sum + a[i]
             sum += a[i];
             i = i + 1;
             // i' = i' + 1

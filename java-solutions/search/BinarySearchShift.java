@@ -1,6 +1,7 @@
 package search;
 
 public class BinarySearchShift {
+
     // Pred: предпологается, что нам дали отсортированный по убыванию массив, элементы которого
     // передвинули на индекс i' = (i + k) % a.len, где k - величина циклического сдвига.
     // Обозначим такой массив как sorted and shifted
@@ -40,7 +41,7 @@ public class BinarySearchShift {
         while (left < right - 1) {
             // mid = (right + left) / 2
             int mid = left + (right - left) / 2;
-
+                                    //      l < m < r
             // P: a[mid] < [a.len - 1] && mid > 0 <- очевидно, из-за ограничений left и right
             if (a[mid] < a[a.length - 1]) {
                 // left' = mid
