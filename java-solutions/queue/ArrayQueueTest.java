@@ -2,7 +2,7 @@ package queue;
 
 import static queue.ArrayQueue.*;
 
-public class ArrayQueueTestMy {
+public class ArrayQueueTest {
     public static void main(String[] args) {
         ArrayQueue queue1 = create();
         ArrayQueue queue2 = create();
