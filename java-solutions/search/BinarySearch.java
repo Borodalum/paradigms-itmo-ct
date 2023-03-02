@@ -87,10 +87,12 @@ public class BinarySearch {
         if (a[mid] <= x) {
             // P && a[mid] <= x
             // P && (right' = mid) -> (right' > 0) && a' = a && x' = x && (left < a.len) -> (left' = left)
+            // && a[mid] <= x <= a[left]
             return recBinSearch(a, x, left, mid);
         } else {
             // P && a[mid] > x
             // P && (left' = mid) -> (left' < a.len) && (right > 0) -> (right' = right) && a' = a && x' = x
+            // && a[right] <= x <= a[mid]
             return recBinSearch(a, x, mid, right);
         }
     }
