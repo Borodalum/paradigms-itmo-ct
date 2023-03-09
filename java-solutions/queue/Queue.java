@@ -23,4 +23,7 @@ public interface Queue {
     // Pred: true
     // Post: size = 0 && immutable(n)
     void clear();
+    // Pred: element != null
+    // Post: count of element in a && immutable(n)
+    int count(Object element);
 }

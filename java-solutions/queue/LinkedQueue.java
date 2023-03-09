@@ -1,7 +1,5 @@
 package queue;
 
-import java.util.Objects;
-
 public class LinkedQueue extends AbstractQueue{
     // Model: a[1]...a[n]
     // Invariant: for i = 1...n: a[i] != null && n >= 0
@@ -22,9 +20,8 @@ public class LinkedQueue extends AbstractQueue{
             this.tail = new Node(element, null);
             this.head = this.tail;
         } else {
-            Node newNode = new Node(element, null);
-            this.tail.next = newNode;
-            this.tail = newNode;
+            this.tail.next = new Node(element, null);;
+            this.tail = this.tail.next;
         }
     }
 
@@ -36,14 +33,25 @@ public class LinkedQueue extends AbstractQueue{
     @Override
     protected Object dequeueImpl() {
         Object result = this.head.element;
-        if (this.head != this.tail) {
-            this.head = this.head.next;
-        }
+        this.head = this.head.next;
         return result;
     }
 
     @Override
     protected void clearImpl() {}
+
+    @Override
+    protected int countImpl(Object element) {
+        Node curNode = this.head;
+        int result = 0;
+        while (curNode != null) {
+            if (curNode.element.equals(element)) {
+                result++;
+            }
+            curNode = curNode.next;
+        }
+        return result;
+    }
 
     private static class Node {
          private final Object element;

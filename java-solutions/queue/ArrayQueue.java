@@ -44,6 +44,20 @@ public class ArrayQueue extends AbstractQueue {
         this.head = 0;
     }
 
+
+    @Override
+    protected int countImpl(Object element) {
+        int result = 0;
+        int i = 0;
+        while (i < this.size) {
+            if (this.elements[(this.head + i) % this.elements.length].equals(element)) {
+                result++;
+            }
+            i++;
+        }
+        return result;
+    }
+
     // Pred: true
     // Post: str = "[a[0], ..., a[n]]"
     public String toStr(ArrayQueue this) {

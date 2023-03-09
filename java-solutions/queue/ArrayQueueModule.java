@@ -3,7 +3,7 @@ package queue;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class ArrayQueueModule {
+public class ArrayQueueModule{
     // Model: a[1]...a[n]
     // Invariant: for i = 1...n: a[i] != null && n >= 0
 
@@ -14,7 +14,7 @@ public class ArrayQueueModule {
     private static Object[] elements = new Object[2];
 
     // Pred: element != null;
-    // Post: n' = n + 1 && a[0] = element && immutable(n)
+    // Post: n' = n + 1 && elements[1] = element && immutable(n)
     public static void enqueue(final Object element) {
         assert element != null;
         Objects.requireNonNull(element);
@@ -25,7 +25,7 @@ public class ArrayQueueModule {
     }
 
     // Pred: size > 0
-    // Post: R = element && elements[0] = element && element != null && immutable(n)
+    // Post: R = element && elements[1] = element && element != null && immutable(n)
     public static Object element() {
         assert size > 0;
         ensureCapacity();
@@ -33,7 +33,7 @@ public class ArrayQueueModule {
     }
 
     // Pred: size > 0
-    // Post: n' = n - 1 && R = element && elements[0] = element && element != null && immutable(n)
+    // Post: n' = n - 1 && R = element && elements[1] = element && element != null && immutable(n)
     public static Object dequeue() {
         assert size > 0;
         ensureCapacity();
@@ -62,7 +62,7 @@ public class ArrayQueueModule {
     }
 
     // Pred: true
-    // Post: str = "[a[0], ..., a[n]]"
+    // Post: str = "[elements[1], ..., elements[n]]"
     public static String toStr() {
         StringBuilder sb = new StringBuilder("[");
         int i = 0;
@@ -77,8 +77,6 @@ public class ArrayQueueModule {
         return sb.toString();
     }
 
-    // Pred: true
-    // Post: elements'.length >= elements.length && immutable(n)
     private static void ensureCapacity() {
         int tail = (head + size) % elements.length;
         if ((head % elements.length) == tail && size == elements.length) {

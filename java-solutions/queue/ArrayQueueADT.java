@@ -22,7 +22,7 @@ public class ArrayQueueADT {
     }
 
     // Pred: element != null && queue != null;
-    // Post: n' = n + 1 && a[n] = element && immutable(n)
+    // Post: n' = n + 1 && elements[n] = element && immutable(n)
     public static void enqueue(final ArrayQueueADT queue, final Object element) {
         assert element != null;
         Objects.requireNonNull(element);

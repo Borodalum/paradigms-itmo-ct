@@ -55,4 +55,11 @@ public abstract class AbstractQueue implements Queue {
     public boolean isEmpty(AbstractQueue this) {
         return this.size == 0;
     }
+
+    // Pred: element != null
+    // Post: count of element in a && immutable(n)
+    public int count(AbstractQueue this, Object element) {
+        return countImpl(element);
+    }
+    protected abstract int countImpl(Object element);
 }
