@@ -28,9 +28,10 @@ public abstract class AbstractQueue implements Queue {
     // Pred: n > 0 && queue != null
     // Post: n' = n - 1 && R = element && elements[1] = element && element != null && immutable(n)
     public Object dequeue(AbstractQueue this) {
-        assert this.size > 0;
+        Object res = element();
         this.size--;
-        return dequeueImpl();
+        dequeueImpl();
+        return res;
     }
 
     protected abstract Object dequeueImpl();

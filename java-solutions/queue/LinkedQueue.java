@@ -32,9 +32,7 @@ public class LinkedQueue extends AbstractQueue{
 
     @Override
     protected Object dequeueImpl() {
-        Object result = this.head.element;
         this.head = this.head.next;
-        return result;
     }
 
     @Override
