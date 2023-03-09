@@ -16,7 +16,7 @@ public abstract class AbstractQueue implements Queue {
 
     protected abstract void enqueueImpl(Object element);
 
-    // Pred: size > 0 && queue != null
+    // Pred: n > 0 && queue != null
     // Post: R = element && elements[1] = element && element != null && immutable(n)
     public Object element(AbstractQueue this) {
         assert this.size > 0;
@@ -25,7 +25,7 @@ public abstract class AbstractQueue implements Queue {
 
     protected abstract Object elementImpl();
 
-    // Pred: size > 0 && queue != null
+    // Pred: n > 0 && queue != null
     // Post: n' = n - 1 && R = element && elements[1] = element && element != null && immutable(n)
     public Object dequeue(AbstractQueue this) {
         assert this.size > 0;
@@ -36,7 +36,7 @@ public abstract class AbstractQueue implements Queue {
     protected abstract Object dequeueImpl();
 
     // Pred: queue != null
-    // Post: size = 0 && immutable(n)
+    // Post: n = 0
     public void clear(AbstractQueue this) {
         clearImpl();
         this.size = 0;
@@ -45,21 +45,29 @@ public abstract class AbstractQueue implements Queue {
     protected abstract void clearImpl();
 
     // Pred: queue != null
-    // Post: R = size && immutable(n)
+    // Post: R = n && immutable(n)
     public int size(AbstractQueue this) {
         return this.size;
     }
 
     // Pred: queue != null
-    // Post: R = (size == 0) && immutable(n)
+    // Post: R = (n == 0) && immutable(n)
     public boolean isEmpty(AbstractQueue this) {
         return this.size == 0;
     }
 
     // Pred: element != null
-    // Post: count of element in a && immutable(n)
+    // Post: count of element in elements[] && immutable(n)
     public int count(AbstractQueue this, Object element) {
-        return countImpl(element);
+        int result = 0;
+        int i = 0;
+        while (i < size) {
+            if (element.equals(element())) {
+                result++;
+            }
+            enqueue(dequeue());
+            i++;
+        }
+        return result;
     }
-    protected abstract int countImpl(Object element);
 }

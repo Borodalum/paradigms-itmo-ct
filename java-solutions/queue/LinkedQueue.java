@@ -40,19 +40,6 @@ public class LinkedQueue extends AbstractQueue{
     @Override
     protected void clearImpl() {}
 
-    @Override
-    protected int countImpl(Object element) {
-        Node curNode = this.head;
-        int result = 0;
-        while (curNode != null) {
-            if (curNode.element.equals(element)) {
-                result++;
-            }
-            curNode = curNode.next;
-        }
-        return result;
-    }
-
     private static class Node {
          private final Object element;
          private Node next;
