@@ -34,7 +34,7 @@ public abstract class AbstractQueue implements Queue {
         return res;
     }
 
-    protected abstract Object dequeueImpl();
+    protected abstract void dequeueImpl();
 
     // Pred: queue != null
     // Post: n = 0

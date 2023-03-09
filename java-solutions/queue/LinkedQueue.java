@@ -31,7 +31,7 @@ public class LinkedQueue extends AbstractQueue{
     }
 
     @Override
-    protected Object dequeueImpl() {
+    protected void dequeueImpl() {
         this.head = this.head.next;
     }
 

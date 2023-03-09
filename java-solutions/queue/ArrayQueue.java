@@ -28,12 +28,11 @@ public class ArrayQueue extends AbstractQueue {
 
     @Override
     protected Object elementImpl() {
-        ensureCapacity();
         return this.elements[this.head % this.elements.length];
     }
 
     @Override
-    protected Object dequeueImpl() {
+    protected void dequeueImpl() {
         this.head++;
     }
 
