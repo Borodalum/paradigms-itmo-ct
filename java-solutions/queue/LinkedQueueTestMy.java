@@ -1,8 +1,8 @@
 package queue;
 
-import static queue.LinkedQueue.*;
+import static queue.LinkedQueue.create;
 
-public class ArrayQueueTestMy {
+public class LinkedQueueTestMy {
     public static void main(String[] args) {
         LinkedQueue queue1 = create();
         LinkedQueue queue2 = create();

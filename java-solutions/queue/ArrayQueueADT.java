@@ -9,15 +9,16 @@ public class ArrayQueueADT {
 
     // Let immutable(n): for i in 1...n: a[i] == a'[i]
     private int size = 0;
-    private int head = 1;
-    private int tail = 1;
+    private int head = 0;
 
     private Object[] elements = new Object[2];
 
+    // Pred: true
+    // Post: R = queue && queue.elements.length = 2
     public static ArrayQueueADT create() {
-        ArrayQueueADT stack = new ArrayQueueADT();
-        stack.elements = new Object[10];
-        return stack;
+        ArrayQueueADT queue = new ArrayQueueADT();
+        queue.elements = new Object[2];
+        return queue;
     }
 
     // Pred: element != null && queue != null;
@@ -25,9 +26,8 @@ public class ArrayQueueADT {
     public static void enqueue(final ArrayQueueADT queue, final Object element) {
         assert element != null;
         Objects.requireNonNull(element);
-        cycleIndex(queue);
-        queue.elements[queue.tail] = element;
-        queue.tail++;
+        ensureCapacity(queue);
+        queue.elements[(queue.head + queue.size) % queue.elements.length] = element;
         queue.size++;
     }
 
@@ -35,17 +35,18 @@ public class ArrayQueueADT {
     // Post: R = element && elements[0] = element && element != null && immutable(n)
     public static Object element(final ArrayQueueADT queue) {
         assert queue.size > 0;
-        cycleIndex(queue);
-        return queue.elements[queue.head];
+        ensureCapacity(queue);
+        return queue.elements[queue.head % queue.elements.length];
     }
 
     // Pred: size > 0 && queue != null
     // Post: n' = n - 1 && R = element && elements[0] = element && element != null && immutable(n)
     public static Object dequeue(final ArrayQueueADT queue) {
         assert queue.size > 0;
-        cycleIndex(queue);
+        ensureCapacity(queue);
         queue.size--;
-        return queue.elements[queue.head++];
+        queue.head++;
+        return queue.elements[(queue.head - 1) % queue.elements.length];
     }
 
     // Pred: queue != null
@@ -64,7 +65,6 @@ public class ArrayQueueADT {
     // Post: n = 0 && size = 0
     public static void clear(final ArrayQueueADT queue) {
         queue.head = 0;
-        queue.tail = 0;
         queue.size = 0;
     }
 
@@ -84,27 +84,15 @@ public class ArrayQueueADT {
         return sb.toString();
     }
 
-    // Pred: queue != null;
-    // Post: 0 <= n < elements.length
-    private static void cycleIndex(final ArrayQueueADT queue) {
-        if (queue.head == queue.elements.length) {
-            queue.head = 0;
-        }
-        if (queue.tail == queue.elements.length) {
-            queue.tail = 0;
-        }
-        ensureCapacity(queue);
-    }
-
     // Pred: queue != null
-    // Post: elements'.length >= elements.length && immutable(n)
+    // Post: elements'.length >= elements.length  && immutable(n)
     private static void ensureCapacity(final ArrayQueueADT queue) {
-        if (queue.head == queue.tail && queue.size == queue.elements.length) {
-            Object[] tempHead = Arrays.copyOfRange(queue.elements, 0, queue.tail);
-            Object[] tempTail = Arrays.copyOfRange(queue.elements, queue.head, queue.elements.length);
+        int tail = (queue.head + queue.size) % queue.elements.length;
+        if (queue.head % queue.elements.length == tail && queue.size == queue.elements.length) {
+            Object[] tempHead = Arrays.copyOfRange(queue.elements, 0, tail);
+            Object[] tempTail = Arrays.copyOfRange(queue.elements, queue.head % queue.elements.length, queue.elements.length);
             queue.elements = Arrays.copyOf(new Object[1], 2 * queue.elements.length);
             queue.head = queue.elements.length - tempTail.length - tempHead.length;
-            queue.tail = 0;
             System.arraycopy(tempTail, 0, queue.elements, queue.head, tempTail.length);
             System.arraycopy(tempHead, 0, queue.elements, queue.head + tempTail.length, tempHead.length);
         }

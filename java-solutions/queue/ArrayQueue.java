@@ -3,69 +3,45 @@ package queue;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class ArrayQueue {
+public class ArrayQueue extends AbstractQueue {
     // Model: a[1]...a[n]
     // Invariant: for i = 1...n: a[i] != null && n >= 0
 
     // Let immutable(n): for i in 1...n: a[i] == a'[i]
-    private int size = 0;
     private int head = 1;
-    private int tail = 1;
 
     private Object[] elements = new Object[2];
 
+    // Pred: true
+    // Post: R = queue && queue.elements.length = 2
     public static ArrayQueue create() {
         final ArrayQueue queue = new ArrayQueue();
         queue.elements = new Object[2];
         return queue;
     }
 
-    // Pred: element != null && queue != null;
-    // Post: n' = n + 1 && a[tail] = element && immutable(n)
-    public void enqueue(ArrayQueue this, final Object element) {
-        assert element != null;
-        Objects.requireNonNull(element);
-        cycleIndex();
-        this.elements[this.tail] = element;
-        this.tail++;
-        this.size++;
+    @Override
+    protected void enqueueImpl(Object element) {
+        ensureCapacity();
+        this.elements[(this.head + this.size) % this.elements.length] = element;
     }
 
-    // Pred: size > 0 && queue != null
-    // Post: R = element && elements[0] = element && element != null && immutable(n)
-    public Object element(ArrayQueue this) {
-        assert this.size > 0;
-        cycleIndex();
-        return this.elements[this.head];
+    @Override
+    protected Object elementImpl() {
+        ensureCapacity();
+        return this.elements[this.head % this.elements.length];
     }
 
-    // Pred: size > 0 && queue != null
-    // Post: n' = n - 1 && R = element && elements[0] = element && element != null && immutable(n)
-    public Object dequeue(ArrayQueue this) {
-        assert this.size > 0;
-        cycleIndex();
-        this.size--;
-        return this.elements[this.head++];
+    @Override
+    protected Object dequeueImpl() {
+        ensureCapacity();
+        this.head++;
+        return this.elements[(this.head - 1) % this.elements.length];
     }
 
-    // Pred: queue != null
-    // Post: R = size && immutable(n)
-    public int size(ArrayQueue this) {
-        return this.size;
-    }
-
-    // Pred: queue != null
-    // Post: R = size == 0 && immutable(n)
-    public boolean isEmpty(ArrayQueue this) {
-        return this.size == 0;
-    }
-
-    // Pred: queue != null
-    // Post: n = 1 && size = 0 && immutable(n)
-    public void clear(ArrayQueue this) {
+    @Override
+    protected void clearImpl() {
         this.head = 0;
-        this.tail = 0;
-        this.size = 0;
     }
 
     // Pred: true
@@ -84,27 +60,15 @@ public class ArrayQueue {
         return sb.toString();
     }
 
-    // Pred: queue != null;
-    // Post: 0 <= n < elements.length
-    private void cycleIndex(ArrayQueue this) {
-        if (this.head == this.elements.length) {
-            this.head = 0;
-        }
-        if (this.tail == this.elements.length) {
-            this.tail = 0;
-        }
-        ensureCapacity();
-    }
-
     // Pred: queue != null
     // Post: elements'.length >= elements.length && immutable(n)
     private void ensureCapacity(ArrayQueue this) {
-        if (this.head == this.tail && this.size == this.elements.length) {
-            Object[] tempHead = Arrays.copyOfRange(this.elements, 0, this.tail);
-            Object[] tempTail = Arrays.copyOfRange(this.elements, this.head, this.elements.length);
+        int tail = (this.head + this.size) % this.elements.length;
+        if (this.head % this.elements.length == tail && this.size == this.elements.length) {
+            Object[] tempHead = Arrays.copyOfRange(this.elements, 0, tail);
+            Object[] tempTail = Arrays.copyOfRange(this.elements, this.head % elements.length, this.elements.length);
             this.elements = Arrays.copyOf(new Object[1], 2 * this.elements.length);
             this.head = this.elements.length - tempTail.length - tempHead.length;
-            this.tail = 0;
             System.arraycopy(tempTail, 0, this.elements, this.head, tempTail.length);
             System.arraycopy(tempHead, 0, this.elements, this.head + tempTail.length, tempHead.length);
         }

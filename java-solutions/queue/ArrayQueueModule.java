@@ -9,8 +9,7 @@ public class ArrayQueueModule {
 
     // Let immutable(n): for i in 1...n: a[i] == a'[i]
     private static int size = 0;
-    private static int head = 1;
-    private static int tail = 1;
+    private static int head = 0;
 
     private static Object[] elements = new Object[2];
 
@@ -19,27 +18,28 @@ public class ArrayQueueModule {
     public static void enqueue(final Object element) {
         assert element != null;
         Objects.requireNonNull(element);
-        cycleIndex();
-        elements[tail] = element;
-        tail++;
+        ensureCapacity();
+        elements[(head + size) % elements.length] = element;
         size++;
+        //System.out.println(head % elements.length + " and tail " + (head + size) % elements.length);
     }
 
     // Pred: size > 0
     // Post: R = element && elements[0] = element && element != null && immutable(n)
     public static Object element() {
         assert size > 0;
-        cycleIndex();
-        return elements[head];
+        ensureCapacity();
+        return elements[head % elements.length];
     }
 
     // Pred: size > 0
     // Post: n' = n - 1 && R = element && elements[0] = element && element != null && immutable(n)
     public static Object dequeue() {
         assert size > 0;
-        cycleIndex();
+        ensureCapacity();
         size--;
-        return elements[head++];
+        head++;
+        return elements[((head - 1) % elements.length)];
     }
 
     // Pred: true
@@ -58,7 +58,6 @@ public class ArrayQueueModule {
     // Post: n = 1 && size = 0
     public static void clear() {
         head = 0;
-        tail = 0;
         size = 0;
     }
 
@@ -78,27 +77,15 @@ public class ArrayQueueModule {
         return sb.toString();
     }
 
-    // Pred: true;
-    // Post: 0 <= n < elements.length
-    private static void cycleIndex() {
-        if (head == elements.length) {
-            head = 0;
-        }
-        if (tail == elements.length) {
-            tail = 0;
-        }
-        ensureCapacity();
-    }
-
     // Pred: true
     // Post: elements'.length >= elements.length && immutable(n)
     private static void ensureCapacity() {
-        if (head == tail && size == elements.length) {
+        int tail = (head + size) % elements.length;
+        if ((head % elements.length) == tail && size == elements.length) {
             Object[] tempHead = Arrays.copyOfRange(elements, 0, tail);
-            Object[] tempTail = Arrays.copyOfRange(elements, head, elements.length);
+            Object[] tempTail = Arrays.copyOfRange(elements, head % elements.length, elements.length);
             elements = Arrays.copyOf(new Object[1], 2 * elements.length);
             head = elements.length - tempTail.length - tempHead.length;
-            tail = 0;
             System.arraycopy(tempTail, 0, elements, head, tempTail.length);
             System.arraycopy(tempHead, 0, elements, head + tempTail.length, tempHead.length);
         }
