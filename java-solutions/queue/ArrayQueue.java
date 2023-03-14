@@ -33,6 +33,7 @@ public class ArrayQueue extends AbstractQueue {
 
     @Override
     protected void dequeueImpl() {
+        this.elements[head % this.elements.length] = null;
         this.head++;
     }
 
