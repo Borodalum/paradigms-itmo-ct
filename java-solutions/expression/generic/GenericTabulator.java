@@ -20,6 +20,9 @@ public class GenericTabulator implements Tabulator {
             case "d" -> {
                 return new DoubleType();
             }
+            case "f" -> {
+                return new FloatType();
+            }
             case "bi" -> {
                 return new BigIntegerType();
             }
