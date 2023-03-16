@@ -52,10 +52,10 @@ public class IntegerType implements Type<Integer> {
 
     private Integer checkedDiv(Integer x, Integer y) {
         if (x == Integer.MIN_VALUE && y == -1) {
-            throw new OverflowException("dsad");
+            throw new OverflowException("Overflow in div");
         }
         if (y == 0) {
-            throw new DivisionByZeroException("dsada");
+            throw new DivisionByZeroException("Division by zero");
         }
         return x / y;
     }
@@ -91,7 +91,7 @@ public class IntegerType implements Type<Integer> {
 
     private void checkMinValue(Integer x ) {
         if (x == Integer.MIN_VALUE) {
-            throw new OverflowException("dsadas");
+            throw new OverflowException("Overflow %(");
         }
     }
 
