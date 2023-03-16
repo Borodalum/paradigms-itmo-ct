@@ -36,7 +36,10 @@ public class LinkedQueue extends AbstractQueue{
     }
 
     @Override
-    protected void clearImpl() {}
+    protected void clearImpl() {
+        this.head = null;
+        this.tail = null;
+    }
 
     private static class Node {
          private final Object element;

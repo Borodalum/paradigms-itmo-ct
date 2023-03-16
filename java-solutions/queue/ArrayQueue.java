@@ -40,6 +40,7 @@ public class ArrayQueue extends AbstractQueue {
     @Override
     protected void clearImpl() {
         this.head = 0;
+        this.elements = Arrays.copyOf(new Object[1], this.elements.length);
     }
 
     // Pred: true
