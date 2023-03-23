@@ -15,6 +15,8 @@ let multiply = baseExp((x, y) => x * y);
 let add = baseExp((x, y) => x + y);
 let divide = baseExp((x, y) => x / y);
 let negate = baseExp((x) => -x);
+let sin = baseExp((x) => Math.sin(x));
+let cos = baseExp((x) => Math.cos(x));
 
 let cnst = (value) => () => value;
 let one = cnst(1);
@@ -30,7 +32,7 @@ let variable = (vrb) => {
     return (...args) => args[VARIABLES[vrb]];
 }
 
-let parse = (expression) => {
+/*let parse = (expression) => {
     let resource = expression.split(/\s+/).filter(i => !!i);
     let OPERATIONS = {
         "+": add, "-": subtract, "*": multiply, "/": divide, "negate": negate
@@ -60,7 +62,7 @@ let parse = (expression) => {
         stck.push(cnst(parseInt(resource[i])));
     }
     return stck.pop();
-}
+}*/
 
 /*let expr = subtract(
     multiply(
