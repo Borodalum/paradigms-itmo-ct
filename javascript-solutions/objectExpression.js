@@ -13,35 +13,53 @@ const ExpPrototype = {
         return this.expressions.map((expr) => expr.toString()).join(" ") + " " + this.sign;
     }
 }
-function setUp(expressions, sign, operation) {
+function setUp(sign, operation) {
     const exp = Object.create(ExpPrototype);
-    exp.expressions = expressions;
     exp.sign = sign;
     exp.operation = operation;
-    return exp;
+    return (...expressions) => {
+        exp.expressions = expressions;
+        return exp;
+    }
 }
 
+const SUPPORTEDOPER = {}
+
 function Subtract(...expressions) {
-    return setUp(expressions, "-", (x, y) => x - y);
+    SUPPORTEDOPER["-"] = [Subtract, 2];
+    const func = setUp( "-", (x, y) => x - y);
+    return func.apply(null, expressions);
 }
 function Add(...expressions) {
-    return setUp(expressions, "+", (x, y) => x + y);
+    SUPPORTEDOPER["+"] = [Add, 2];
+    const func = setUp( "+", (x, y) => x + y);
+    return func.apply(null, expressions);
 }
 function Multiply(...expressions) {
-    return setUp(expressions, "*", (x, y) => x * y);
+    SUPPORTEDOPER["*"] = [Multiply, 2];
+    const func = setUp( "*", (x, y) => x * y);
+    return func.apply(null, expressions);
 }
 function Divide(...expressions) {
-    return setUp(expressions, "/", (x, y) => x / y);
+    SUPPORTEDOPER["/"] = [Divide, 2];
+    const func = setUp( "/", (x, y) => x / y);
+    return func.apply(null, expressions);
 }
 function Negate(...expressions) {
-    return setUp(expressions, "negate", (x) => -x);
+    SUPPORTEDOPER["negate"] = [Negate, 1];
+    const func = setUp( "negate", (x) => -x);
+    return func.apply(null, expressions);
 }
 
 function Exp(...expressions) {
-    return setUp(expressions, "exp", Math.exp)
+    SUPPORTEDOPER["exp"] = [Exp, 1];
+    const func = setUp( "exp", Math.exp);
+    return func.apply(null, expressions);
 }
 function Ln(...expressions) {
-    return setUp(expressions, "ln", Math.log)
+    SUPPORTEDOPER["ln"] = [Ln, 1];
+    const func = setUp( "ln", Math.log);
+    return func.apply(null, expressions);
 }
 
 function Variable(vrb) {
@@ -68,15 +86,6 @@ function Const(value) {
     }
 }
 
-const SUPPORTEDOPER = {
-    "+": [Add, 2],
-    "-": [Subtract, 2],
-    "*": [Multiply, 2],
-    "/": [Divide, 2],
-    "negate": [Negate, 1],
-    "exp": [Exp, 1],
-    "ln": [Ln, 1]
-}
 const VARS = {
     "x": 0, "y": 1, "z": 2
 }
@@ -100,3 +109,4 @@ const parse = (expression) => {
 
 let ex1 = parse("x 2 -");
 let ex = new Subtract(new Variable("x"), new Const(3));
+console.log(ex.toString())
