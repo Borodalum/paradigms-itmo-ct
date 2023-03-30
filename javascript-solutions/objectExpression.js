@@ -38,10 +38,10 @@ function Negate(...expressions) {
 }
 
 function Exp(...expressions) {
-    return setUp(expressions, "exp", (x) => Math.exp(x))
+    return setUp(expressions, "exp", Math.exp)
 }
 function Ln(...expressions) {
-    return setUp(expressions, "ln", (x) => Math.log(x))
+    return setUp(expressions, "ln", Math.log)
 }
 
 function Variable(vrb) {
