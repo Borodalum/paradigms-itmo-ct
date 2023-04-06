@@ -13,54 +13,33 @@ const ExpPrototype = {
         return this.expressions.map((expr) => expr.toString()).join(" ") + " " + this.sign;
     }
 }
-function setUp(sign, operation) {
+
+const SUPPORTEDOPER = {};
+const setUp = (f, sign, operation) => {
     const exp = Object.create(ExpPrototype);
     exp.sign = sign;
     exp.operation = operation;
-    return (...expressions) => {
+    const fnc = (...expressions) => {
         exp.expressions = expressions;
         return exp;
     }
+    SUPPORTEDOPER[sign] = [f, operation.length];
+    return fnc;
+}
+function createOperation(sign, operation) {
+    const fnc = function (...expressions) {
+        return setUp(fnc, sign, operation)(...expressions);
+    }
+    return fnc;
 }
 
-const SUPPORTEDOPER = {}
-
-function Subtract(...expressions) {
-    SUPPORTEDOPER["-"] = [Subtract, 2];
-    const func = setUp( "-", (x, y) => x - y);
-    return func.apply(null, expressions);
-}
-function Add(...expressions) {
-    SUPPORTEDOPER["+"] = [Add, 2];
-    const func = setUp( "+", (x, y) => x + y);
-    return func.apply(null, expressions);
-}
-function Multiply(...expressions) {
-    SUPPORTEDOPER["*"] = [Multiply, 2];
-    const func = setUp( "*", (x, y) => x * y);
-    return func.apply(null, expressions);
-}
-function Divide(...expressions) {
-    SUPPORTEDOPER["/"] = [Divide, 2];
-    const func = setUp( "/", (x, y) => x / y);
-    return func.apply(null, expressions);
-}
-function Negate(...expressions) {
-    SUPPORTEDOPER["negate"] = [Negate, 1];
-    const func = setUp( "negate", (x) => -x);
-    return func.apply(null, expressions);
-}
-
-function Exp(...expressions) {
-    SUPPORTEDOPER["exp"] = [Exp, 1];
-    const func = setUp( "exp", Math.exp);
-    return func.apply(null, expressions);
-}
-function Ln(...expressions) {
-    SUPPORTEDOPER["ln"] = [Ln, 1];
-    const func = setUp( "ln", Math.log);
-    return func.apply(null, expressions);
-}
+const Subtract = createOperation("-", (x, y) => x - y);
+const Add = createOperation("+", (x, y) => x + y);
+const Multiply = createOperation("*", (x, y) => x * y);
+const Divide = createOperation("/", (x, y) => x / y);
+const Negate = createOperation("negate", (x) => -x);
+const Exp = createOperation("exp", Math.exp);
+const Ln = createOperation("ln", Math.log);
 
 function Variable(vrb) {
     return {
@@ -73,7 +52,6 @@ function Variable(vrb) {
         }
     }
 }
-
 function Const(value) {
     return {
         value: value,
@@ -106,7 +84,3 @@ const parse = (expression) => {
     }
     return stck.pop();
 }
-
-let ex1 = parse("x 2 -");
-let ex = new Subtract(new Variable("x"), new Const(3));
-console.log(ex.toString())
