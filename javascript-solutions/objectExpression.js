@@ -18,7 +18,7 @@ const SUPPORTEDOPER = {
 };
 
 function createOperation(sign, operation) {
-    const fnc = (...expressions) => {
+    const fnc = function (...expressions) {
         this.expressions = expressions;
     }
     fnc.prototype = Object.create(expPrototype);
