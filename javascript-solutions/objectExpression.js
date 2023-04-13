@@ -201,7 +201,7 @@ const parseOperation = (exp, expParentheses) => {
         }
         ind++;
     }
-    return SUPPORTEDOPER[token][0].apply(null, operands);
+    return new (SUPPORTEDOPER[token][0])(...operands);
 }
 const parseOperand = (exp, parsingOp) => {
     skipWhitespaces(exp);
