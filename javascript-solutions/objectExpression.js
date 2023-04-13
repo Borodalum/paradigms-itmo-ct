@@ -40,6 +40,7 @@ const Sum = createOperation("sum", (...args) => args.reduce((acc, cur) => acc + 
 const Avg = createOperation("avg", (...args) => args.reduce((acc, cur) => acc + cur, 0) / args.length);
 
 function Variable(vrb) {
+    // this.
     return {
         vrb: vrb,
         evaluate(...args) {
@@ -53,6 +54,8 @@ function Variable(vrb) {
         }
     }
 }
+
+new Variable("x");
 
 function Const(value) {
     return {
