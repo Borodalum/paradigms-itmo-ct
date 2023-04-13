@@ -80,7 +80,7 @@ const parse = (expression) => {
         if (res[i] in SUPPORTEDOPER) {
             const exp = SUPPORTEDOPER[res[i]];
             const args = stck.splice(stck.length - exp[1]);
-            stck.push(exp[0].apply(null, args));
+            stck.push(new exp[0](...args));
         } else if (res[i] in VARS) {
             stck.push(new Variable(res[i]));
         } else {
