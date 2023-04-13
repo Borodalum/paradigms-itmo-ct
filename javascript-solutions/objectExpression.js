@@ -1,6 +1,6 @@
 "use strict"
 
-const ExpPrototype = {
+const expPrototype = {
     evaluate(...args) {
         return this.operation.apply(null,
             this.expressions.map((expr) => expr.evaluate(...args))
@@ -17,21 +17,15 @@ const ExpPrototype = {
 const SUPPORTEDOPER = {
 };
 
-const setUp = (f, sign, operation) => {
-    const exp = Object.create(ExpPrototype);
-    exp.sign = sign;
-    exp.operation = operation;
-    const fnc = (...expressions) => {
-        exp.expressions = expressions;
-        return exp;
-    }
-    SUPPORTEDOPER[sign] = [f, operation.length];
-    return fnc;
-}
 function createOperation(sign, operation) {
-    const fnc = function (...expressions) {
-        return setUp(fnc, sign, operation)(...expressions);
+    const fnc = (...expressions) => {
+        this.expressions = expressions;
     }
+    fnc.prototype = Object.create(expPrototype);
+    fnc.prototype.sign = sign;
+    fnc.prototype.operation = operation;
+
+    SUPPORTEDOPER[sign] = [fnc, operation.length];
     return fnc;
 }
 
