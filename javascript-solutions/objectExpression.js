@@ -81,6 +81,7 @@ const VARS = {
 const parse = (expression) => {
     const res = expression.split(/\s+/).filter(s => !!s);
     const stck = [];
+    //:NOTE: foreach
     for (let i = 0; i < res.length; ++i) {
         if (res[i] in SUPPORTEDOPER) {
             const exp = SUPPORTEDOPER[res[i]];
