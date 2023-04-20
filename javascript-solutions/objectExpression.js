@@ -14,8 +14,21 @@ const expPrototype = {
     }
 }
 
-const SUPPORTEDOPER = {
-};
+const expOther = {
+    val : "",
+    evaluate(...args) {},
+    toString() {
+        return String(this.val);
+    },
+    prefix() {
+        return String(this.val);
+    }
+}
+
+const SUPPORTEDOPER = {};
+const VARS = {
+    "x": 0, "y": 1, "z": 2
+}
 
 function createOperation(sign, operation) {
     const fnc = function (...expressions) {
@@ -29,6 +42,17 @@ function createOperation(sign, operation) {
     return fnc;
 }
 
+function createOtherExp(evl, tStr, prfx) {
+    const fnc = function(val) {
+        this.val = val;
+    }
+    fnc.prototype = Object.create(expOther);
+    fnc.prototype.toString = tStr;
+    fnc.prototype.evaluate = evl;
+    fnc.prototype.prefix = prfx;
+    return fnc;
+}
+
 const Subtract = createOperation("-", (x, y) => x - y);
 const Add = createOperation("+", (x, y) => x + y);
 const Multiply = createOperation("*", (x, y) => x * y);
@@ -37,48 +61,22 @@ const Negate = createOperation("negate", (x) => -x);
 const Exp = createOperation("exp", Math.exp);
 const Ln = createOperation("ln", Math.log);
 const Sum = createOperation("sum", (...args) => args.reduce((acc, cur) => acc + cur, 0));
-const Avg = createOperation("avg", (...args) => args.reduce((acc, cur) => acc + cur, 0) / args.length);
+const Avg = createOperation("avg", (...args) => Sum.prototype.operation(...args) / args.length);
 
-function Variable(vrb) {
-    // this.
-    return {
-        vrb: vrb,
-        evaluate(...args) {
-            return args[VARS[vrb]];
-        },
-        toString() {
-            return this.vrb;
-        },
-        prefix(){
-            return this.vrb;
-        }
-    }
-}
+const Variable = createOtherExp(
+    function () { return arguments[VARS[this.val]]; },
+    function () { return this.val; },
+    function () { return this.val; }
+);
+const Const = createOtherExp(
+    function () { return this.val; },
+    function () { return String(this.val); },
+    function () { return String(this.val); },
+);
 
-new Variable("x");
-
-function Const(value) {
-    return {
-        value: value,
-        evaluate() {
-            return this.value;
-        },
-        toString() {
-            return String(this.value);
-        },
-        prefix(){
-            return String(this.value);
-        }
-    }
-}
-
-const VARS = {
-    "x": 0, "y": 1, "z": 2
-}
 const parse = (expression) => {
     const res = expression.split(/\s+/).filter(s => !!s);
     const stck = [];
-    //:NOTE: foreach
     for (let i = 0; i < res.length; ++i) {
         if (res[i] in SUPPORTEDOPER) {
             const exp = SUPPORTEDOPER[res[i]];
@@ -225,7 +223,6 @@ const parseOperand = (exp, parsingOp) => {
 }
 
 const parsePrefix = (exp) => {
-    //console.log(exp)
     checkIsEmpty(exp);
     ind = 0;
     balance = 0;
@@ -248,5 +245,3 @@ const parsePrefix = (exp) => {
     }
     return ans;
 }
-
-//console.log(parsePrefix("(avg y(sum )y z)"))
