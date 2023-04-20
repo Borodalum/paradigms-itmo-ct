@@ -105,7 +105,7 @@ function exceptionFct(name, func) {
     function NewException() {
         Exception.call(this, func.apply(null, arguments));
     }
-    NewException.prototype = new Exception(name);
+    NewException.prototype = new CreateException(name);
     return NewException;
 }
 
