@@ -92,7 +92,7 @@ const parse = (expression) => {
 }
 
 function Exception(message) {
-    this.call(Error, message);
+    Error.call(this, message);
     this.message = message;
 }
 Exception.prototype = Error.prototype;
