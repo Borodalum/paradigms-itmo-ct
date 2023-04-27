@@ -92,6 +92,7 @@ const parse = (expression) => {
 }
 
 function Exception(message) {
+    Error.call(this, message);
     this.message = message;
 }
 Exception.prototype = Error.prototype;
@@ -149,8 +150,9 @@ const getIdenty = (exp) => {
     return identy;
 }
 const checkIsEmpty = (exp) => {
-    if (exp.trim().length === 0)
+    if (exp.trim().length === 0) {
         throw new EmptyInputException();
+    }
 }
 
 const parseConst = (exp) => {
@@ -177,8 +179,9 @@ const parseOperation = (exp, expParentheses) => {
             throw new UnexpectedOperandException(token, ind);
         }
     }
-    if (!(token in SUPPORTEDOPER))
+    if (!(token in SUPPORTEDOPER)) {
         throw new UnexpectedOperationException(token, ind);
+    }
     const operands = [];
     if (SUPPORTEDOPER[token][1] === 0) {
         let pOp = parseOperand(exp, true);
