@@ -33,28 +33,31 @@
 (load-file "proto.clj")
 
 (def toString (method :toString))
+(def toStringPostfix (method :toStringPostfix))
 (def evaluate (method :evaluate))
-(defn expressionProto [evaluate toString]
+(defn expressionProto [evaluate toString toStringPostfix]
       {
        :evaluate evaluate
        :toString toString
+       :toStringPostfix toStringPostfix
        })
 
 (def _getValue (field :value))
-(def Constant (constructor
-                (fn [this value] (assoc this :value value))
-                (expressionProto
-                  (fn [this map] (_getValue this))
-                  (fn [this] (str (_getValue this)))
-                  )
-                ))
-(def Variable (constructor
-                (fn [this vrb] (assoc this :value vrb))
-                (expressionProto
-                  (fn [this args] (args (_getValue this)))
-                  (fn [this] (_getValue this))
-                  )
-                ))
+(def toStrValues (fn [this] (str (_getValue this))))
+(def OneValueExpressions (constructor
+                           (fn [this evaluate] (assoc this :evaluate evaluate))
+                           (expressionProto
+                             (fn [this _] 0)
+                             toStrValues
+                             toStrValues
+                             )
+                           ))
+(defn onevalueFactory [evaluate] (constructor
+                                   (fn [this value] (assoc this :value value))
+                                   (OneValueExpressions evaluate)
+                                   ))
+(def Constant (onevalueFactory (fn [this _] (_getValue this))))
+(def Variable (onevalueFactory (fn [this args] (get args (clojure.string/lower-case (subs (_getValue this) 0 1))))))
 
 (def _getOp (field :operation))
 (def _getOperands (field :operands))
@@ -64,6 +67,7 @@
                     (expressionProto
                       (fn [this args] (apply (_getOp this) (map #(evaluate % args) (_getOperands this))))
                       (fn [this] (str "(" (_getOpStr this) " " (clojure.string/join " " (mapv toString (_getOperands this))) ")"))
+                      (fn [this] (str "(" (clojure.string/join " " (mapv toStringPostfix (_getOperands this))) " " (_getOpStr this) ")"))
                       )
                     ))
 (defn expFactory [operation opStr] (constructor
@@ -77,6 +81,35 @@
 (def Negate (expFactory negateImpl "negate"))
 (def Sin (expFactory #(Math/sin %) "sin"))
 (def Cos (expFactory #(Math/cos %) "cos"))
+(def Inc (expFactory #(+ % 1) "++"))
+(def Dec (expFactory #(+ % 1) "--"))
 
-(def suppObject {'+ Add '- Subtract '* Multiply '/ Divide 'negate Negate 'sin Sin 'cos Cos})
+(def suppObject {'++ Inc '-- Dec '+ Add '- Subtract '* Multiply '/ Divide 'negate Negate 'sin Sin 'cos Cos})
 (defn parseObject [string] ((parserFact Constant Variable suppObject) (read-string string)))
+
+(load-file "parser.clj")
+
+(def *space (+char " \t\n\r"))
+(def *ws (+ignore (+star *space)))
+(def *digit (+char "0123456789"))
+(def *number (+map read-string (+str (+seq (+opt (+char "-")) (+str (+plus *digit)) (+char ".") *digit))))
+
+(def *all-chars (mapv char (range 32 128)))
+(def *letter (+char (apply str (filter #(Character/isLetter %) *all-chars))))
+
+(def *identifierVar (+str (+seqf cons *ws (+char "xyzXYZ") (+star (+char "xyzXYZ")))))
+
+(def *operChars (+or *letter (+char "+-*/") (+plus (+char "+-"))))
+(def *operation (+str (+seqf cons *ws *operChars (+star *operChars))))
+
+(def parseObjectPostfix
+  (letfn [(*expression [] (delay
+                            (+or
+                              (+map Constant *number)
+                              (+map (comp Variable str) *identifierVar)
+                              (+map (comp #(suppObject %) symbol) *operation)
+                              (+map #(apply (last %) (drop-last %))
+                                    (+seqn 1 *ws (+char "(") (+seqf cons *ws (*expression) (+star (+seqn 0 *ws (*expression)))) *ws (+char ")")))
+                              )))]
+         (+parser (+seqn 0 *ws (*expression) *ws)))
+  )
