@@ -82,7 +82,7 @@
 (def Sin (expFactory #(Math/sin %) "sin"))
 (def Cos (expFactory #(Math/cos %) "cos"))
 (def Inc (expFactory #(+ % 1) "++"))
-(def Dec (expFactory #(+ % 1) "--"))
+(def Dec (expFactory #(- % 1) "--"))
 
 (def suppObject {'++ Inc '-- Dec '+ Add '- Subtract '* Multiply '/ Divide 'negate Negate 'sin Sin 'cos Cos})
 (defn parseObject [string] ((parserFact Constant Variable suppObject) (read-string string)))
