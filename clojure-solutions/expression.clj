@@ -92,7 +92,7 @@
 (def *space (+char " \t\n\r"))
 (def *ws (+ignore (+star *space)))
 (def *digit (+char "0123456789"))
-(def *number (+map read-string (+str (+seq (+opt (+char "-")) (+str (+plus *digit)) (+char ".") *digit))))
+(def *number (+map read-string (+str (+seq (+opt (+char "-")) (+str (+plus *digit)) (+char ".") (+plus *digit)))))
 
 (def *all-chars (mapv char (range 32 128)))
 (def *letter (+char (apply str (filter #(Character/isLetter %) *all-chars))))
