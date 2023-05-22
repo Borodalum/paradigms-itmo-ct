@@ -97,17 +97,17 @@
 (def *all-chars (mapv char (range 32 128)))
 (def *letter (+char (apply str (filter #(Character/isLetter %) *all-chars))))
 
-(def *identifierVar (+str (+seqf cons *ws (+char "xyzXYZ") (+star (+char "xyzXYZ")))))
+(def *identifierVar (+str (+seq *ws (+str (+plus (+char "xyzXYZ"))))))
 
 (def *operChars (+or *letter (+char "+-*/") (+plus (+char "+-"))))
-(def *operation (+str (+seqf cons *ws *operChars (+star *operChars))))
+(def *operation (+str (+seq *ws (+str (+plus *operChars)))))
 
 (def parseObjectPostfix
   (letfn [(*expression [] (delay
                             (+or
                               (+map Constant *number)
-                              (+map (comp Variable str) *identifierVar)
-                              (+map (comp #(suppObject %) symbol) *operation)
+                              (+map Variable (+seqf str *identifierVar))
+                              (+map #(suppObject %) (+seqf symbol *operation))
                               (+map #(apply (last %) (drop-last %))
                                     (+seqn 1 *ws (+char "(") (+seqf cons *ws (*expression) (+star (+seqn 0 *ws (*expression)))) *ws (+char ")")))
                               )))]
