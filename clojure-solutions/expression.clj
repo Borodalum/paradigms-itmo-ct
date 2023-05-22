@@ -102,14 +102,13 @@
 (def *operChars (+or *letter (+char "+-*/") (+plus (+char "+-"))))
 (def *operation (+str (+seq *ws (+str (+plus *operChars)))))
 
-(def parseObjectPostfix
-  (letfn [(*expression [] (delay
-                            (+or
-                              (+map Constant *number)
-                              (+map Variable (+seqf str *identifierVar))
-                              (+map #(suppObject %) (+seqf symbol *operation))
-                              (+map #(apply (last %) (drop-last %))
-                                    (+seqn 1 *ws (+char "(") (+seqf cons *ws (*expression) (+star (+seqn 0 *ws (*expression)))) *ws (+char ")")))
-                              )))]
-         (+parser (+seqn 0 *ws (*expression) *ws)))
-  )
+(defn *expression [] (delay
+                       (+or
+                         (+map Constant *number)
+                         (+map Variable (+seqf str *identifierVar))
+                         (+map #(suppObject %) (+seqf symbol *operation))
+                         (+map #(apply (last %) (drop-last %))
+                               (+seqn 1 *ws (+char "(") (+seqf cons *ws (*expression) (+star (+seqn 0 *ws (*expression)))) *ws (+char ")")))
+                         )))
+
+(def parseObjectPostfix (+parser (+seqn 0 *ws (*expression) *ws)))
