@@ -57,7 +57,7 @@
                                    (OneValueExpressions evaluate)
                                    ))
 (def Constant (onevalueFactory (fn [this _] (_getValue this))))
-(def Variable (onevalueFactory (fn [this args] (get args (clojure.string/lower-case (subs (_getValue this) 0 1))))))
+(def Variable (onevalueFactory (fn [this args] (get args (str (Character/toLowerCase (first (_getValue this))))))))
 
 (def _getOp (field :operation))
 (def _getOperands (field :operands))
