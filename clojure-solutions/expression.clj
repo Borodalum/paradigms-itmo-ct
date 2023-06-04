@@ -48,8 +48,8 @@
                            (fn [this evaluate] (assoc this :evaluate evaluate))
                            (expressionProto
                              (fn [this _] 0)
-                             toStrValues
-                             toStrValues
+                             (fn [this] (str (_getValue this)))
+                             (fn [this] (str (_getValue this)))
                              )
                            ))
 (defn onevalueFactory [evaluate] (constructor
